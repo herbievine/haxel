@@ -1,0 +1,15 @@
+{
+  "name": "haxel",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify"
+  },
+  "dependencies": {
+    "hono": "^4.6.7",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "wrangler": "^3.79.0"
+  }
+}
