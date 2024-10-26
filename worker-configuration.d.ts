@@ -4,4 +4,5 @@ interface Env {
 	YOUTUBE_API_KEY: "AIzaSyD7g4B8B8NNaribd6uyCj3gGfnx0oVjyvA";
 	CONVERTER_API_KEY: "7cd25bff43msh3ecf4927ff69a77p1cae86jsn9fffe932dfdd";
 	AUDIO: R2Bucket;
+	DB: D1Database;
 }

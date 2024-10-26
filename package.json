@@ -2,10 +2,16 @@
   "name": "haxel",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify"
+    "deploy": "wrangler deploy --minify",
+    "db:gen": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "better-sqlite3": "^11.5.0",
+    "drizzle-kit": "^0.26.2",
+    "drizzle-orm": "^0.35.3",
     "hono": "^4.6.7",
+    "nanoid": "^5.0.7",
     "zod": "^3.23.8"
   },
   "devDependencies": {

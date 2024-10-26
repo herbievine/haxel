@@ -2,6 +2,10 @@ import { Hono } from "hono";
 import { itunes } from "./api/itunes";
 import { youtube } from "./api/youtube";
 import { converter } from "./api/converter";
+import { drizzle } from "drizzle-orm/d1";
+import { songs } from "./db";
+import { eq } from "drizzle-orm";
+import { id } from "./utils/id";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -22,9 +26,20 @@ app.get("/search", async (c) => {
 });
 
 app.get("/play/:id", async (c) => {
-  const id = c.req.param("id");
+  const itunesId = c.req.param("id");
 
-  const { results } = await itunes(id);
+  const db = drizzle(c.env.DB);
+  const existingSong = await db.select().from(songs).where(eq(songs.itunesId, itunesId)).get();
+
+  console.log({ existingSong });
+
+  if (existingSong) {
+    return c.json({
+      url: `https://audio.herbievine.com/${existingSong.id}`,
+    });
+  }
+
+  const { results } = await itunes(itunesId);
 
   const song = results[0];
 
@@ -46,15 +61,36 @@ app.get("/play/:id", async (c) => {
 
   const buffer = await response.arrayBuffer();
 
-  const put = await c.env.AUDIO.put(`${song.trackName} - ${song.artistName}`, buffer, {
-    customMetadata: {
-      itunesId: id,
-    },
+  const { key } = await c.env.AUDIO.put(id(), buffer, {
     httpMetadata: { contentType: "audio/mpeg" },
   });
 
+  console.log(
+    await db
+      .insert(songs)
+      .values({
+        id: id(),
+        bucketId: key,
+        itunesId: song.trackId.toString(),
+        itunesAlbumId: song.collectionId.toString(),
+        itunesArtistId: song.artistId.toString(),
+        name: song.trackName,
+        releaseDate: song.releaseDate,
+        discCount: song.discCount,
+        discNumber: song.discNumber,
+        trackCount: song.trackCount,
+        trackNumber: song.trackNumber,
+        trackTimeMillis: song.trackTimeMillis,
+        primaryGenreName: song.primaryGenreName,
+        artworkUrl30: song.artworkUrl30,
+        artworkUrl60: song.artworkUrl60,
+        artworkUrl100: song.artworkUrl100,
+      })
+      .returning(),
+  );
+
   return c.json({
-    url: `https://audio.herbievine.com/${encodeURI(put.key)}`,
+    url: `https://audio.herbievine.com/${key}`,
   });
 });
 
