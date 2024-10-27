@@ -27,3 +27,21 @@ export const songs = sqliteTable("songs", {
     .notNull()
     .default(sql`(current_timestamp)`),
 });
+
+export const albums = sqliteTable("albums", {
+  id: text("id").primaryKey(),
+
+  bucketCoverId: text("bucket_cover_id").notNull(),
+
+  itunesId: text("itunes_id").notNull(),
+  itunesArtistId: text("itunes_artist_id").notNull(),
+
+  name: text("name").notNull(),
+  releaseDate: text("release_date").notNull(),
+  trackCount: int("track_count").notNull(),
+  primaryGenreName: text("primary_genre_name").notNull(),
+
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`(current_timestamp)`),
+});

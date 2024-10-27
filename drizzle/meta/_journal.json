@@ -22,6 +22,13 @@
       "when": 1729963403348,
       "tag": "0002_outgoing_reptil",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1730019135986,
+      "tag": "0003_shocking_exiles",
+      "breakpoints": true
     }
   ]
 }
